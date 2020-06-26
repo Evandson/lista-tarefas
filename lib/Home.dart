@@ -12,13 +12,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   List _tarefas = [];
+  Map<String, dynamic> _tarefaRemovida = Map();
   TextEditingController _controller = TextEditingController();
 
   Future<File> _getFile() async {
 
     final diretorio = await getApplicationDocumentsDirectory();
     return File( "${diretorio.path}/data.json" );
-
   }
 
   _salvarTarefa(){
@@ -57,7 +57,6 @@ class _HomeState extends State<Home> {
     }catch(e){
       return null;
     }
-
   }
 
   @override
@@ -74,15 +73,35 @@ class _HomeState extends State<Home> {
 
   Widget criarItemLista(context, index){
 
-    final item = _tarefas[index]["titulo"];
+    //final item = _tarefas[index]["titulo"];
 
     return Dismissible(
-        key: Key(item),
+        key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
         direction: DismissDirection.endToStart,
         onDismissed: (direction){
 
+          _tarefaRemovida = _tarefas[index];
+
           _tarefas.removeAt(index);
           _salvarArquivo();
+
+          final snackbar = SnackBar(
+            duration: Duration(seconds: 5),
+            content: Text("Tarefa removida"),
+            action: SnackBarAction(
+                label: "Desfazer",
+                textColor: Colors.white,
+                onPressed: (){
+                  setState(() {
+                    _tarefas.insert(index, _tarefaRemovida);
+                  });
+
+                  _salvarArquivo();
+                }
+            ),
+          );
+          
+          Scaffold.of(context).showSnackBar(snackbar);
 
         },
         background: Container(
@@ -99,6 +118,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         child: CheckboxListTile(
+          activeColor: Colors.green,
           title: Text( _tarefas[index]['titulo'] ),
           value: _tarefas[index]['realizada'],
           onChanged: (valorAlterado){
@@ -117,6 +137,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
 
     print("itens: " + _tarefas.toString() );
+    //print("itens: " + DateTime.now().millisecondsSinceEpoch.toString());
 
     return Scaffold(
       appBar: AppBar(
