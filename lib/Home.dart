@@ -118,7 +118,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         child: CheckboxListTile(
-          activeColor: Colors.green,
+          activeColor: Colors.greenAccent,
           title: Text( _tarefas[index]['titulo'] ),
           value: _tarefas[index]['realizada'],
           onChanged: (valorAlterado){
@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.greenAccent,
           onPressed: (){
 
             showDialog(
@@ -163,12 +163,11 @@ class _HomeState extends State<Home> {
                           labelText: "Digite sua tarefa"
                       ),
                       onChanged: (text){
-
                       },
                     ),
                     actions: <Widget>[
                       FlatButton(
-                        child: Text("Cancelar"),
+                        child: Text("Cancelar",style: TextStyle(color: Colors.red),),
                         onPressed: () => Navigator.pop(context) ,
                       ),
                       FlatButton(
